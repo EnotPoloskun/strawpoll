@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'httparty'
+gem 'activesupport', require: false
 
 group :test do
   gem 'rspec'
