@@ -46,7 +46,7 @@ describe Strawpoll::Poll do
         end
 
         it do
-          expect { Strawpoll::Poll.get('1234') }.to raise_error(Strawpoll::APIError)
+          expect { Strawpoll::Poll.get('1234') }.to raise_error(Strawpoll::API::Error)
         end
       end
     end
@@ -78,7 +78,7 @@ describe Strawpoll::Poll do
         it do
           expect {
             Strawpoll::Poll.create(options: ['Option1', 'Options2', 'Options3'], title: 'title', multi: false)
-          }.to raise_error(Strawpoll::APIError)
+          }.to raise_error(Strawpoll::API::Error)
         end
       end
     end

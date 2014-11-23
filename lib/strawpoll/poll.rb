@@ -1,7 +1,5 @@
 module Strawpoll
   class Poll
-    API_PATH = "http://strawpoll.me/api/v2/polls"
-
     attr_accessor :id, :title, :options, :votes, :multi, :permissive
 
     def initialize(options = {})
@@ -25,12 +23,20 @@ module Strawpoll
         raise ArgumentError.new('Attributes title and options are required') unless self.send(attribute)
       end
 
-      Net::HTTP.post_form(URI(API_PATH), title: title, options: options, multi: multi, permissive: permissive).tap do |response|
-        parsed_body = JSON.parse(response.body)
+      response = API.create(title: title, options: options, multi: multi, permissive: permissive)
 
-        raise Strawpoll::APIError.new(parsed_body["error"]) if parsed_body["error"]
+      self.id = response["id"]
 
-        self.id = parsed_body["id"]
+      self
+    end
+
+    def reload
+      API.get(id).tap do |response|
+        self.title = response[:title]
+        self.multi = response[:multi]
+        self.permissive = response[:permissive]
+        self.options = response[:options]
+        self.votes = response[:votes]
       end
 
       self
@@ -40,8 +46,7 @@ module Strawpoll
       def get(id)
         raise ArgumentError.new('You must specify id') unless id
 
-        response = JSON.parse(Net::HTTP.get(URI("#{API_PATH}/#{id}")))
-        raise Strawpoll::APIError.new(response["error"]) if response["error"]
+        response = API.get(id)
 
         self.new(response.merge(id: id))
       end
