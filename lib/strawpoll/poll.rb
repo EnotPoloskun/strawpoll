@@ -9,7 +9,8 @@ module Strawpoll
 
       options = {
         multi: false,
-        permissive: false
+        permissive: false,
+        votes: [],
       }.merge(options)
 
       [:id, :title, :options, :votes, :multi, :permissive].each do |attribute|
@@ -25,9 +26,11 @@ module Strawpoll
       end
 
       Net::HTTP.post_form(URI(API_PATH), title: title, options: options, multi: multi, permissive: permissive).tap do |response|
-        raise Strawpoll::APIError.new(response.body) if response.code != "200"
+        parsed_body = JSON.parse(response.body)
 
-        self.id = JSON.parse(response.body)["id"]
+        raise Strawpoll::APIError.new(parsed_body["error"]) if parsed_body["error"]
+
+        self.id = parsed_body["id"]
       end
 
       self
