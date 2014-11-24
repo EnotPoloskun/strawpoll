@@ -31,6 +31,8 @@ module Strawpoll
     end
 
     def reload
+      raise ArgumentError.new('You must specify id') unless id
+
       API.get(id).tap do |response|
         self.title = response[:title]
         self.multi = response[:multi]
@@ -40,6 +42,25 @@ module Strawpoll
       end
 
       self
+    end
+
+    def votes_count(option = nil)
+      result = options.inject({}) do |result, option|
+        result[option] = votes[options.index(option)] || 0
+
+        result
+      end
+
+      option.nil? ? result : result[option]
+    end
+
+    def vote(option)
+      option = option.to_s
+      raise ArgumentError.new('Wrong option') unless options.include?(option)
+
+      API.patch(id, { votes: [options.index(option)] })
+
+      reload
     end
 
     class << self

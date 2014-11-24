@@ -29,7 +29,8 @@ module Strawpoll
             end
           when :patch
             Net::HTTP::Patch.new(uri).tap do |request|
-              request.set_form_data(params)
+              request.body = params.to_json
+              request.content_type = 'application/json'
             end
         end
 
