@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Strawpoll::VERSION
   spec.authors       = ["Pavel Astraukh"]
   spec.email         = ["paladin111333@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{Ruby client for strawpoll.me}
+  spec.description   = %q{With the help of this gem you can manipulate with polls of strawpoll.me service}
   spec.homepage      = ""
   spec.license       = "MIT"
 
