@@ -25,7 +25,7 @@ module Strawpoll
 
       response = API.create(title: title, options: options, multi: multi, permissive: permissive)
 
-      self.id = response["id"]
+      self.id = response[:id]
 
       self
     end
